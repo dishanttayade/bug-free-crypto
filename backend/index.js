@@ -22,7 +22,7 @@ app.post('/upload', (req, res) => {
             console.log(err);
             return res.status(500).send(err);
         }
-        res.json({ fileName: file.name, filePath: `/uploads/${file.name}`});
+        res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}`});
     })
 })
 

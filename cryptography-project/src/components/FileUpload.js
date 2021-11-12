@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react'
+import EncryptOption from './EncryptOption';
 // import axios from 'axios'
 // import express from 'express'
 // const appp = express()
@@ -75,7 +76,7 @@ function FileUpload() {
                     </div>
                     <div className="border">
                         <div className="m-2 p-2">
-                            Select
+                            <EncryptOption />
                         </div>
                     </div>
                 </div>
