@@ -5,16 +5,16 @@ import React, { Fragment, useState } from 'react'
 
 function FileUpload() {
 
-    const [file, setFile] = useState('')
-    const [fileName, setFileName] = useState('Choose Files')
-    const [uploaded, setUploaded] = useState({});
+    const [file, setFile] = useState();
+    // const [fileName, setFileName] = useState('Choose Files')
+    const [uploaded, setUploaded] = useState(false);
 
     const onChange = (e) => {
-        console.log(e.target.uploadFile.files[0])
-        setFileName(e.target.uploadFile.files[0].name);
+        console.log(e.target.files[0])
+        // setFileName(e.target.files[0].name);
         // setFile()
-        setFile(e.target.uploadFile.files[0])
-        
+        setFile(e.target.files[0])
+        setUploaded(true);
     }
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -24,29 +24,35 @@ function FileUpload() {
         // FormData.bind('file',file)
         // http://localhost:3000/http://localhost:3001/upload
 
-        try{
-            const res = await fetch('http://localhost:3001/upload', {
+        // try{
+            // const res = await 
+            fetch(
+                'http://localhost:3001/upload', {
                 method: 'POST',
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                },
-                body: formData
-            });
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((result) => {
+                    console.log('Success:', result);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            // console.log(res.json());
 
-            console.log(res);
+            // const {fileName, filePath} = res.body;
 
-            const {fileName, filePath} = res.body;
-
-            setUploaded({ fileName, filePath})
+            // setUploaded({ fileName, filePath})
+            setUploaded(true)
             console.log(uploaded)
 
-        } catch (err){
-            if(err.status === 500){
-                console.log("There was an 500 error")
-            }else{
-                console.log(err.response.data.msg);
-            }
-        }
+        // } catch (err){
+        //     if(err.status === 500){
+        //         console.log("There was an 500 error")
+        //     }else{
+        //         console.log(err.response.data.msg);
+        //     }
+        // }
 
     }
 

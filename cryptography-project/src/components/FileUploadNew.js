@@ -6,14 +6,15 @@ function FileUploadPage(){
 
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
+        console.log(event.target.files[0])
         setIsSelected(true);
     };
 
     const handleSubmission = () => {
         const formData = new FormData();
 
-        formData.append('File', selectedFile);
-
+        formData.append('file', selectedFile);
+        console.log(formData)
         fetch(
             'http://localhost:3001/upload',
             {

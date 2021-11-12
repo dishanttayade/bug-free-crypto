@@ -1,6 +1,6 @@
 import './App.css';
 import FileUpload from './components/FileUpload';
-import FileUploadPage from './components/FileUploadNew';
+// import FileUploadPage from './components/FileUploadNew';
 
 function App() {
   return (
@@ -10,8 +10,8 @@ function App() {
         </h4>
       
       Hello There
-      <FileUploadPage />
-      {/* <FileUpload /> */}
+      {/* <FileUploadPage /> */}
+      <FileUpload />
     </div>
   );
 }
