@@ -1,1 +1,1 @@
-### Now, lets implement the cryptographic algorithms.
+### Now, let's implement the cryptographic algorithms.
