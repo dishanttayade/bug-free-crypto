@@ -1,81 +1,37 @@
 const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
+const { json } = require("express");
+const algorithm = "aes-256-cbc"
 
-exports.getTextAndEncryptSy  = function(req, res) {
-  console.log("yes enterd")
-  const algorithm = "aes-192-cbc";
-  const password = "Password used to generate key";
-  const key = crypto.scryptSync(password, "salt", 24);
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(algorithm, key, iv);
+const key = process.env.ENCRYPT_KEY || crypto.randomBytes(32)
+const iv = process.env.ENCRYPT_IV || crypto.randomBytes(16)
 
-  cipher.on("readable", () => {
-    console.log(cipher.read().toString("hex"));
-  });
+function encrypt (req, res) {
+    let text = "hello" ; 
+    console.info("Encrypt Key", key)
+    console.info("Encrypt iv", iv)
+    console.info("Source str", text)
+    let cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv)
+    let encrypted = cipher.update(text)
+    encrypted = Buffer.concat([encrypted, cipher.final()])
+    console.info("Encrypted text", encrypted.toString("hex"))
+    res.status(200).send({ encryptedData: encrypted.toString("hex") }) 
+}
 
-  cipher.write(req.body);
-  cipher.end();
-  res.send(cipher , password)
-};
+function decrypt (req, res) {
+    // let text = "fdsfd";
+    console.log("hello there")
+    console.log(req.body); 
+    let text = req.body["data"]; 
+    console.log(text)
+    let encryptedText = Buffer.from(text, 'hex')
+    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv)
+    let decrypted = decipher.update(encryptedText)
+    decrypted = Buffer.concat([decrypted, decipher.final()])
+    console.info("Decrypted text", decrypted.toString())
+    res.status(200).send(decrypted.toString())
+}
 
-exports.getTextAndDecryptSy = function(req, res) {
-    const crypto = require("crypto");
-    const algorithm = "aes-192-cbc";
-    const password = "Password used to generate key";
-    const key = crypto.scryptSync(password, "salt", 24);
-    const iv = crypto.randomBytes(16);
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
-  
-    decipher.on("readable", () => {
-      console.log(decipher.read().toString("utf8"));
-    });
-    decipher.write(req.body, "hex");
-    decipher.end();
-    res.send(decipher, password)
-  };
-
-// exports.EncryptUploadedFile = function(req, res){
-//     if(req.files == null){
-//         return res.status(400).json({ msg: "No file uploaded!"})
-//     }
-//     const file = req.files.file;
-//     file.mv(`${__dirname}/uploads/${file.name}`, err => {
-//         if(err){
-//             console.log(err);
-//             return res.status(500).send(err);
-//         }
-//         res.json({ fileName: file.name, filePath: `${__dirname}/uploads/${file.name}`});
-//     })
-//     encrypted = EncryptFile(fileName) ; 
-//     res.send(encrypted); 
-// }
-
-
-// const EncryptFile = function(file){
-//   console.log(file); 
-//   const algorithm = "aes-192-cbc";
-//   const key = crypto.scryptSync(password, "salt", 24);
-//   const iv = crypto.randomBytes(16);
-//   const decipher = crypto.createDecipheriv(algorithm, key, iv);
-//   const fileToEncrypt = path.join("../uploads" , file);
-//   const input = fs.createReadStream(fileToEncrypt);
-//   const output = fs.createReadStream(`${fileToEncrypt}.sec`);
-
-//   input.pipe(cipher).pipe(output);
-//   fs.unlinkSync(fileToEncrypt);
-//   console.log("Encryption successfull");
-//   return fileToEncrypt.sec ; 
-// };
-
-// exports.DecryptFile = function(req, res) {
-//   const homeDir = process.env.USERPROFILE;
-//   const fileToEncrypt = path.join(homeDir, "file-name.txt");
-//   const input = fs.createReadStream(fileToEncrypt);
-//   const output = fs.createWriteStream(
-//     fileToEncrypt.slice(0, fileToEncrypt.length - 4)
-//   );
-//   input.pipe(decipher).pipe(output);
-//   fs.unlinkSync(fileToEncrypt);
-//   console.log("Decryption successfull!!!");
-// };
+module.exports = {
+    encrypt,
+    decrypt
+}
