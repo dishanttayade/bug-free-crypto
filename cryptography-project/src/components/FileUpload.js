@@ -4,6 +4,7 @@ import EncryptOption from './EncryptOption';
 // import express from 'express'
 // const appp = express()
 
+
 function FileUpload() {
 
     const [file, setFile] = useState();
@@ -54,7 +55,6 @@ function FileUpload() {
         //         console.log(err.response.data.msg);
         //     }
         // }
-
     }
 
 

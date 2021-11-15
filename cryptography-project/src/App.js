@@ -1,5 +1,6 @@
 import './App.css';
 import FileUpload from './components/FileUpload';
+import Textarea from './components/Textarea';
 // import FileUploadPage from './components/FileUploadNew';
 
 function App() {
@@ -12,7 +13,9 @@ function App() {
       Hello There
       {/* <FileUploadPage /> */}
       <FileUpload />
+      <Textarea />
     </div>
+
   );
 }
 
